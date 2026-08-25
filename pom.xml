@@ -18,7 +18,7 @@
         <dependency>
             <groupId>com.microsoft.sqlserver</groupId>
             <artifactId>mssql-jdbc</artifactId>
-            <version>12.6.1.jre11</version> <!-- Ajuste a versão conforme necessário -->
+            <version>12.10.2.jre11</version> <!-- Ajuste a versão conforme necessário -->
             <scope>runtime</scope>
         </dependency>
     </dependencies>
