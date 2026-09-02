@@ -5,7 +5,8 @@ import java.awt.*;
 
 public class TelaCadastro extends JFrame {
     JLabel rtlNome, rtlEmail, rtlSenha, titulo;
-    JTextField txtNome, txtEmail, txtSenha;
+    JTextField txtNome, txtEmail;
+    JPasswordField txtSenha;
     JButton cadastrar, login;
 
     public TelaCadastro(){
@@ -29,7 +30,8 @@ public class TelaCadastro extends JFrame {
 
         txtNome = new JTextField(100);
         txtEmail = new JTextField(150);
-        txtSenha = new JTextField(30);
+
+        txtSenha = new JPasswordField(30);
 
         cadastrar = new JButton("Cadastrar");
         login = new JButton("Já tem uma conta? Clique aqui para acessá-la");
