@@ -5,6 +5,9 @@ import javax.swing.text.MaskFormatter;
 import java.awt.*;
 import java.text.ParseException;
 
+import logica.CadastroControle;
+import main.java.ui.TelaLogin;
+
 public class TelaCadastro extends JFrame {
     JLabel rtlNome, rtlEmail, rtlSenha, rtlTelefone, titulo;
     JFormattedTextField campo;
@@ -106,6 +109,23 @@ public class TelaCadastro extends JFrame {
         login.addActionListener(e -> {
             TelaLogin login = new TelaLogin();
             setVisible(false);
+        });
+
+        cadastrar.addActionListener(e -> {
+            String nome, email, senha, telefone;
+            nome = txtNome.getText();
+            email = txtEmail.getText();
+            senha = txtSenha.getText();
+            telefone = txtTelefone.getText();
+
+            if(nome.isEmpty() || email.isEmpty() || senha.isEmpty() || telefone.isEmpty()){
+                JOptionPane.showMessageDialog(null, "Preencha todos os campos para seguir");
+            }else{
+                CadastroControle cadc = new CadastroControle();
+                cadc.cadastrar(nome, email, senha, telefone);
+                TelaLogin login = new TelaLogin();
+                setVisible(false);
+            }
         });
     }
 }

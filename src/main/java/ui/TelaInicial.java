@@ -1,4 +1,6 @@
-package ui;
+package main.java.ui;
+
+import ui.TelaCadastro;
 
 import javax.swing.*;
 import java.awt.*;

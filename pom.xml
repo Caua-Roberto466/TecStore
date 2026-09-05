@@ -21,6 +21,11 @@
             <version>12.10.2.jre11</version> <!-- Ajuste a versão conforme necessário -->
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>org.mindrot</groupId>
+            <artifactId>jbcrypt</artifactId>
+            <version>0.4</version>
+        </dependency>
     </dependencies>
 
 </project>

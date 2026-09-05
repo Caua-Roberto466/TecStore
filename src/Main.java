@@ -1,7 +1,4 @@
-import conexao.Conexao;
-import ui.TelaInicial;
-
-import javax.swing.*;
+import main.java.ui.TelaInicial;
 
 public class Main {
     public static void main(String[] args) {
