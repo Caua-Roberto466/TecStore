@@ -1,9 +1,12 @@
-package main.java.ui;
+package ui;
 
+
+import logica.LoginControle;
 import ui.TelaCadastro;
 
 import javax.swing.*;
 import java.awt.*;
+import ui.TelaHome;
 
 public class TelaLogin extends JFrame {
     JLabel rtlEmail, rtlSenha, titulo;
@@ -77,6 +80,20 @@ public class TelaLogin extends JFrame {
         cadastro.addActionListener(e -> {
             TelaCadastro tela = new TelaCadastro();
             setVisible(false);
+        });
+
+        entrar.addActionListener(e -> {
+            String email = txtEmail.getText();
+            String senha = txtSenha.getText();
+
+            LoginControle log = new LoginControle();
+
+            if(log.logar(email, senha)){
+                TelaHome home = new TelaHome();
+                setVisible(false);
+            }else{
+                JOptionPane.showMessageDialog(null, "Email ou senha inválidos");
+            }
         });
     }
 }

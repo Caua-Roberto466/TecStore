@@ -16,10 +16,6 @@ public class Conexao {
     public Conexao(){
         try{
             conn = DriverManager.getConnection(url, user, senha);
-            if(conn != null){
-                JOptionPane.showMessageDialog(null, "Conexão estabelecida com sucesso");
-
-            }
         }catch(SQLException e){
             e.printStackTrace();
         }

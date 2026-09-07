@@ -6,7 +6,7 @@ import java.awt.*;
 import java.text.ParseException;
 
 import logica.CadastroControle;
-import main.java.ui.TelaLogin;
+import ui.TelaLogin;
 
 public class TelaCadastro extends JFrame {
     JLabel rtlNome, rtlEmail, rtlSenha, rtlTelefone, titulo;
