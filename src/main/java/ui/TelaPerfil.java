@@ -27,6 +27,6 @@ public class TelaPerfil extends JFrame {
         prfNome.setText(usuario.getNome());
         prfEmail.setText(usuario.getEmail());
 
-        
+
     }
 }
