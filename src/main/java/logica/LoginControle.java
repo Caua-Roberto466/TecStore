@@ -14,7 +14,7 @@ public class LoginControle {
 
     public boolean logar(String email, String senha){
         boolean res = false;
-        String sql = "SELECT email, senha_hash FROM usuario WHERE email = ?";
+        String sql = "SELECT nome, email, senha_hash FROM usuario WHERE email = ?";
 
         try(PreparedStatement stmt = con.getConn().prepareStatement(sql)){
             stmt.setString(1, email);
@@ -22,7 +22,11 @@ public class LoginControle {
             try(ResultSet rs = stmt.executeQuery()){
                 if (rs.next()){
                     String senhaBanco = rs.getString("senha_hash");
-                    res = BCrypt.checkpw(senha, senhaBanco);
+                    if(BCrypt.checkpw(senha, senhaBanco)){
+                        String nome = rs.getString("nome");
+                        Sessao.setUsuarioLogado(new Usuario(nome, email));
+                        res = true;
+                    }
                 }else{
                     res = false;
                 }

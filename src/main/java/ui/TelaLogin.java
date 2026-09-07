@@ -89,7 +89,7 @@ public class TelaLogin extends JFrame {
             LoginControle log = new LoginControle();
 
             if(log.logar(email, senha)){
-                TelaHome home = new TelaHome();
+                TelaPerfil home = new TelaPerfil();
                 setVisible(false);
             }else{
                 JOptionPane.showMessageDialog(null, "Email ou senha inválidos");
