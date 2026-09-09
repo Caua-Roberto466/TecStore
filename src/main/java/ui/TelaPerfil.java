@@ -1,5 +1,6 @@
 package ui;
 
+import logica.AtualizarPerfil;
 import logica.Sessao;
 import logica.Usuario;
 
@@ -12,7 +13,9 @@ public class TelaPerfil extends JFrame {
     ImageIcon img = new ImageIcon("editar.png");
     Image imgR = img.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
     ImageIcon icEditar = new ImageIcon(imgR);
-    JButton editar = new JButton(icEditar);
+    JButton editarNome = new JButton(icEditar);
+    JTextField nomeEditado = new JTextField(100);
+    JButton salvar = new JButton("Salvar");
 
     public TelaPerfil(){
         componentes();
@@ -33,8 +36,32 @@ public class TelaPerfil extends JFrame {
         prfNome.setText(usuario.getNome());
         prfEmail.setText(usuario.getEmail());
 
-        editar.setBounds(20,20,20,20);
+        prfNome.setBounds(10, 20, 100, 20);
+        editarNome.setBounds(130,18,20,20);
 
-        add(editar);
+        add(editarNome);
+        add(prfNome);
+
+        editarNome.addActionListener(e ->{
+            nomeEditado.setText(prfNome.getText());
+            nomeEditado.setBounds(10, 40, 100, 20);
+            salvar.setBounds(130, 40, 80, 20);
+            add(salvar);
+            add(nomeEditado);
+            revalidate();
+            repaint();
+            nomeEditado.requestFocus();
+        });
+        salvar.addActionListener(e -> {
+            AtualizarPerfil att = new AtualizarPerfil();
+            boolean alterou = att.atualizarNome(nomeEditado.getText());
+            if(alterou){
+                prfNome.setText(nomeEditado.getText());
+            }
+            remove(salvar);
+            remove(nomeEditado);
+            revalidate();
+            repaint();
+        });
     }
 }
