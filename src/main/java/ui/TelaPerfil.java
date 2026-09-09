@@ -1,6 +1,7 @@
 package ui;
 
 import logica.AtualizarPerfil;
+import logica.ExcluirConta;
 import logica.Sessao;
 import logica.Usuario;
 
@@ -10,12 +11,16 @@ import java.awt.*;
 public class TelaPerfil extends JFrame {
     JLabel prfNome, prfEmail;
     Usuario usuario = Sessao.getUsuarioLogado();
+
     ImageIcon img = new ImageIcon("editar.png");
     Image imgR = img.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
     ImageIcon icEditar = new ImageIcon(imgR);
     JButton editarNome = new JButton(icEditar);
+
     JTextField nomeEditado = new JTextField(100);
     JButton salvar = new JButton("Salvar");
+
+    JButton excluirConta = new JButton("Excluir");
 
     public TelaPerfil(){
         componentes();
@@ -38,9 +43,11 @@ public class TelaPerfil extends JFrame {
 
         prfNome.setBounds(10, 20, 100, 20);
         editarNome.setBounds(130,18,20,20);
+        excluirConta.setBounds(10, 60, 80, 20);
 
         add(editarNome);
         add(prfNome);
+        add(excluirConta);
 
         editarNome.addActionListener(e ->{
             nomeEditado.setText(prfNome.getText());
@@ -52,6 +59,7 @@ public class TelaPerfil extends JFrame {
             repaint();
             nomeEditado.requestFocus();
         });
+
         salvar.addActionListener(e -> {
             AtualizarPerfil att = new AtualizarPerfil();
             boolean alterou = att.atualizarNome(nomeEditado.getText());
@@ -62,6 +70,21 @@ public class TelaPerfil extends JFrame {
             remove(nomeEditado);
             revalidate();
             repaint();
+        });
+
+        excluirConta.addActionListener(e -> {
+            int op = JOptionPane.showConfirmDialog(null,"Deseja realmente excluir sua conta? [Ação irreversível]", "Confirmação", JOptionPane.YES_NO_OPTION);
+
+            if(op == JOptionPane.YES_OPTION){
+                ExcluirConta exc = new ExcluirConta();
+                if(exc.excluirConta(prfEmail.getText())){
+                    JOptionPane.showMessageDialog(null, "Conta excluída cm exito");
+                    TelaCadastro tela = new TelaCadastro();
+                    setVisible(false);
+                }
+            } else if(op == JOptionPane.NO_OPTION) {
+                JOptionPane.showMessageDialog(null, "Ação interrompida, conta a salvo");
+            }
         });
     }
 }
