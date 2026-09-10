@@ -23,4 +23,19 @@ public class AtualizarPerfil {
             return false;
         }
     }
+
+    public boolean atualizarEmail(String email){
+        String sql = "UPDATE usuario SET email = ? WHERE email = ?";
+        String emailBanco = usuario.getEmail();
+
+        try(PreparedStatement stmt = con.getConn().prepareStatement(sql)){
+            stmt.setString(1, email);
+            stmt.setString(2, emailBanco);
+            int afetados = stmt.executeUpdate();
+            return afetados > 0;
+        }catch(SQLException e){
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
