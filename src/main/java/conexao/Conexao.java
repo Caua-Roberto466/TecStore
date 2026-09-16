@@ -1,4 +1,4 @@
-package main.java.conexao;
+package conexao;
 
 import main.java.ui.TelaInicial;
 

@@ -1,6 +1,6 @@
 package logica;
 
-import main.java.conexao.Conexao;
+import conexao.Conexao;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.SQLException;
