@@ -1,6 +1,6 @@
 package logica;
 
-import conexao.Conexao;
+import main.java.conexao.Conexao;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.PreparedStatement;
