@@ -1,12 +1,10 @@
 package conexao;
 
-import main.java.ui.TelaInicial;
-
 import javax.swing.*;
 import java.sql.*;
 
 public class Conexao {
-    public static String url = "jdbc:sqlserver://localhost:49681;databaseName=TecStore;encrypt=true;trustServerCertificate=true;";
+    public static String url = "jdbc:sqlserver://localhost:1433;databaseName=TecStore;encrypt=true;trustServerCertificate=true;";
     public static String user = "bancotec";
     public static String senha = "Teste123!";
     Connection conn;

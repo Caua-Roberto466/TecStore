@@ -1,6 +1,6 @@
-package main.java.ui;
+package ui;
 
-import ui.TelaCadastro;
+import ui.TelaLogin;
 
 import javax.swing.*;
 import java.awt.*;
@@ -54,8 +54,8 @@ public class TelaInicial extends JFrame {
 
         //Lógica
         entrar.addActionListener(e -> {
-            TelaCadastro cad = new TelaCadastro();
-            setVisible(false);
+            TelaLogin login = new TelaLogin();
+            dispose();
         });
     }
 }

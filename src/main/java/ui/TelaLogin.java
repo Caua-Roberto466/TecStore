@@ -79,7 +79,7 @@ public class TelaLogin extends JFrame {
 
         cadastro.addActionListener(e -> {
             TelaCadastro tela = new TelaCadastro();
-            setVisible(false);
+            dispose();
         });
 
         entrar.addActionListener(e -> {
@@ -89,8 +89,8 @@ public class TelaLogin extends JFrame {
             LoginControle log = new LoginControle();
 
             if(log.logar(email, senha)){
-                TelaPerfil perfil = new TelaPerfil();
-                setVisible(false);
+                TelaHome home = new TelaHome();
+                dispose();
             }else{
                 JOptionPane.showMessageDialog(null, "Email ou senha inválidos");
             }
