@@ -108,7 +108,7 @@ public class TelaCadastro extends JFrame {
 
         login.addActionListener(e -> {
             TelaLogin login = new TelaLogin();
-            setVisible(false);
+            dispose();
         });
 
         cadastrar.addActionListener(e -> {
@@ -124,7 +124,7 @@ public class TelaCadastro extends JFrame {
                 CadastroControle cadc = new CadastroControle();
                 cadc.cadastrar(nome, email, senha, telefone);
                 TelaLogin login = new TelaLogin();
-                setVisible(false);
+                dispose();
             }
         });
     }

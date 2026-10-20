@@ -1,7 +1,7 @@
 /*
 Tirar do comentário para criar o banco
 CREATE DATABASE TecStore
-COLLATE Latin1_100_CI_AS_SC_UTF8;
+COLLATE Latin1_General_100_CI_AS_SC_UTF8;
 
 USE TecStore;
 
@@ -52,6 +52,11 @@ data_venda DATETIME DEFAULT GETDATE(),
 valor_total DECIMAL(6,2) NOT NULL,
 forma_pagamento VARCHAR(100) NOT NULL,
 id_usuario INT NOT NULL REFERENCES usuario,
-id_vendedor INT NOT NULL REFERENCES vendedor,
-id_item INT NOT NULL REFERENCES item_venda
+id_vendedor INT NOT NULL REFERENCES vendedor
+);
+
+CREATE TABLE venda_item(
+id_venda INT NOT NULL REFERENCES venda,
+id_item INT NOT NULL REFERENCES item_venda,
+PRIMARY KEY (id_venda, id_item)
 );

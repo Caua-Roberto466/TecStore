@@ -24,6 +24,7 @@ public class TelaPerfil extends JFrame {
     JButton salvarEmail = new JButton("Salvar");
 
     JButton excluirConta = new JButton("Excluir");
+    JButton irLoja = new JButton("Loja");
 
     public TelaPerfil(){
         componentes();
@@ -52,8 +53,17 @@ public class TelaPerfil extends JFrame {
         editarNome.setBounds(155,20,20,20);
         editarEmail.setBounds(155,60,20,20);
         excluirConta.setBounds(10, 140, 80, 20);
+        irLoja.setBounds(100, 140, 80, 20);
 
         prfNome.setFont(new Font("SansSerif", Font.PLAIN, 20));
+
+        irLoja.setFont(new Font("SansSerif", Font.PLAIN, 13));
+        irLoja.setForeground(new Color(41, 128, 185));
+        irLoja.setBorderPainted(false);
+        irLoja.setContentAreaFilled(false);
+        irLoja.setFocusPainted(false);
+        irLoja.setOpaque(false);
+        irLoja.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         //Adicionando na tela
         add(editarNome);
@@ -61,6 +71,7 @@ public class TelaPerfil extends JFrame {
         add(prfNome);
         add(prfEmail);
         add(excluirConta);
+        add(irLoja);
 
         /*
         ==============================================================
@@ -113,6 +124,11 @@ public class TelaPerfil extends JFrame {
             repaint();
         });
 
+        irLoja.addActionListener(e -> {
+            TelaHome home = new TelaHome();
+            dispose();
+        });
+
         excluirConta.addActionListener(e -> {
             int op = JOptionPane.showConfirmDialog(null,"Deseja realmente excluir sua conta? [Ação irreversível]", "Confirmação", JOptionPane.YES_NO_OPTION);
 
@@ -120,8 +136,8 @@ public class TelaPerfil extends JFrame {
                 ExcluirConta exc = new ExcluirConta();
                 if(exc.excluirConta(prfEmail.getText())){
                     JOptionPane.showMessageDialog(null, "Conta excluída cm exito");
-                    TelaCadastro tela = new TelaCadastro();
-                    setVisible(false);
+                    TelaLogin login = new TelaLogin();
+                    dispose();
                 }
             } else if(op == JOptionPane.NO_OPTION) {
                 JOptionPane.showMessageDialog(null, "Ação interrompida, conta a salvo");

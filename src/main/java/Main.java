@@ -1,7 +1,16 @@
-import main.java.ui.TelaInicial;
+import ui.TelaInicial;
+
+import javax.swing.*;
 
 public class Main {
     public static void main(String[] args) {
-        TelaInicial tela = new TelaInicial();
+        SwingUtilities.invokeLater(() -> {
+            try {
+                new TelaInicial();
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.exit(1);
+            }
+        });
     }
 }
