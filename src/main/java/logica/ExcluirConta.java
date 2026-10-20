@@ -1,6 +1,6 @@
 package logica;
 
-import main.java.conexao.Conexao;
+import conexao.Conexao;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
