@@ -24,13 +24,4 @@ public class Conexao {
     public Connection getConn() throws SQLException {
         return conn;
     }
-
-    public void comandoSQL(String sql){
-        try{
-            stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            resultset = stmt.executeQuery(sql);
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "ERRO INESPERADO!!! "+e);
-        }
-    }
 }
