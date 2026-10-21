@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.util.List;
 
 public class VendaControle {
+    Conexao con = new Conexao();
 
     public int finalizarVenda(List<ItemCarrinho> itens, String formaPagamento){
         int idVenda = -1;
@@ -21,8 +22,6 @@ public class VendaControle {
         if(usuario == null){
             return -1;
         }
-
-        Conexao con = new Conexao();
 
         try{
             con.getConn().setAutoCommit(false);
