@@ -1,39 +1,23 @@
+package logica;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class Venda {
 
     private int idVenda;
+    private List<ItemCarrinho> itens;
     private LocalDateTime dataVenda;
     private BigDecimal valorTotal;
     private String formaPagamento;
-    private int idUsuario;
     private int idVendedor;
     private int idItem;
 
     public Venda() {
     }
 
-    public Venda(LocalDateTime dataVenda, BigDecimal valorTotal, String formaPagamento,
-                 int idUsuario, int idVendedor, int idItem) {
-        this.dataVenda = dataVenda;
-        this.valorTotal = valorTotal;
-        this.formaPagamento = formaPagamento;
-        this.idUsuario = idUsuario;
-        this.idVendedor = idVendedor;
-        this.idItem = idItem;
-    }
 
-    public Venda(int idVenda, LocalDateTime dataVenda, BigDecimal valorTotal, String formaPagamento,
-                 int idUsuario, int idVendedor, int idItem) {
-        this.idVenda = idVenda;
-        this.dataVenda = dataVenda;
-        this.valorTotal = valorTotal;
-        this.formaPagamento = formaPagamento;
-        this.idUsuario = idUsuario;
-        this.idVendedor = idVendedor;
-        this.idItem = idItem;
-    }
 
     public int getIdVenda() {
         return idVenda;
@@ -67,14 +51,6 @@ public class Venda {
         this.formaPagamento = formaPagamento;
     }
 
-    public int getIdUsuario() {
-        return idUsuario;
-    }
-
-    public void setIdUsuario(int idUsuario) {
-        this.idUsuario = idUsuario;
-    }
-
     public int getIdVendedor() {
         return idVendedor;
     }
@@ -98,7 +74,6 @@ public class Venda {
                 ", dataVenda=" + dataVenda +
                 ", valorTotal=" + valorTotal +
                 ", formaPagamento='" + formaPagamento + '\'' +
-                ", idUsuario=" + idUsuario +
                 ", idVendedor=" + idVendedor +
                 ", idItem=" + idItem +
                 '}';
