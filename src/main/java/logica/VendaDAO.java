@@ -1,3 +1,5 @@
+import logica.Venda;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -35,7 +37,6 @@ public class VendaDAO {
             stmt.setTimestamp(1, Timestamp.valueOf(venda.getDataVenda()));
             stmt.setBigDecimal(2, venda.getValorTotal());
             stmt.setString(3, venda.getFormaPagamento());
-            stmt.setInt(4, venda.getIdUsuario());
             stmt.setInt(5, venda.getIdVendedor());
             stmt.setInt(6, venda.getIdItem());
 
@@ -92,29 +93,5 @@ public class VendaDAO {
         return null;
     }
 
-    public List<Venda> listarTodas() throws SQLException {
-        List<Venda> vendas = new ArrayList<>();
 
-        try (Connection conn = ConexaoSQLServer.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(SQL_SELECT_ALL);
-             ResultSet rs = stmt.executeQuery()) {
-
-            while (rs.next()) {
-                vendas.add(mapearVenda(rs));
-            }
-        }
-        return vendas;
-    }
-
-    private Venda mapearVenda(ResultSet rs) throws SQLException {
-        return new Venda(
-                rs.getInt("id_venda"),
-                rs.getTimestamp("data_venda").toLocalDateTime(),
-                rs.getBigDecimal("valor_total"),
-                rs.getString("forma_pagamento"),
-                rs.getInt("id_usuario"),
-                rs.getInt("id_vendedor"),
-                rs.getInt("id_item")
-        );
-    }
 }
