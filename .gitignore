@@ -40,3 +40,6 @@ build/
 
 ### Banco de dados ###
 .sql
+
+### Diagrama de classe ###
+.drawio
