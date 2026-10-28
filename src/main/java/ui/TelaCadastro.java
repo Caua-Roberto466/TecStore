@@ -42,6 +42,13 @@ public class TelaCadastro extends JFrame {
         txtSenha = new JPasswordField(30);
 
         txtTelefone = new JFormattedTextField();
+        try {
+            MaskFormatter mascara = new MaskFormatter("(##) #####-####");
+            mascara.setPlaceholderCharacter('_');
+            txtTelefone = new JFormattedTextField(mascara);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         cadastrar = new JButton("Cadastrar");
         login = new JButton("Já tem uma conta? Clique aqui para acessá-la");
@@ -59,14 +66,6 @@ public class TelaCadastro extends JFrame {
 
         rtlSenha.setBounds(50, 210, 100, 25);
         txtSenha.setBounds(150, 210, 250, 25);
-
-        try {
-            MaskFormatter mascara = new MaskFormatter("(##) #####-####");
-            mascara.setPlaceholderCharacter('_');
-            campo = new JFormattedTextField(mascara);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
 
         cadastrar.setBounds(150, 260, 200, 40);
         login.setBounds(90, 320, 320, 25);
@@ -122,9 +121,13 @@ public class TelaCadastro extends JFrame {
                 JOptionPane.showMessageDialog(null, "Preencha todos os campos para seguir");
             }else{
                 CadastroControle cadc = new CadastroControle();
-                cadc.cadastrar(nome, email, senha, telefone);
-                TelaLogin login = new TelaLogin();
-                dispose();
+                boolean criou = cadc.cadastrar(nome, email, senha, telefone);
+                if(criou){
+                    TelaLogin login = new TelaLogin();
+                    dispose();
+                }else{
+                    JOptionPane.showMessageDialog(null, "Este email ja esta cadastrado. Faca login ou use outro email.");
+                }
             }
         });
     }

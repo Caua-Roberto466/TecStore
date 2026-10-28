@@ -14,11 +14,22 @@ import java.util.List;
 public class TelaHome extends JFrame {
     private static final Color AZUL = new Color(41, 128, 185);
     private static final Color AZUL_ESCURO = new Color(31, 97, 141);
+    private static final Color VERDE = new Color(39, 174, 96);
     private static final Color CINZA_TEXTO = new Color(100, 100, 100);
     private static final Color CINZA_FUNDO = new Color(240, 242, 245);
     private static final Color BORDA_CLARA = new Color(220, 224, 230);
 
-    JButton minhaConta, verCarrinho;
+    // Paletas (início, fim do degradê) usadas nas miniaturas, uma por categoria
+    private static final Color[][] PALETAS = {
+            {new Color(52, 152, 219), new Color(31, 97, 141)},
+            {new Color(155, 89, 182), new Color(108, 52, 131)},
+            {new Color(26, 188, 156), new Color(14, 122, 102)},
+            {new Color(230, 126, 34), new Color(175, 96, 26)},
+            {new Color(231, 76, 60), new Color(169, 50, 38)},
+            {new Color(52, 73, 94), new Color(33, 47, 61)}
+    };
+
+    JButton minhaConta, verCarrinho, gerenciar;
     JLabel contadorCarrinho;
     JPanel painelProdutos;
 
@@ -30,14 +41,21 @@ public class TelaHome extends JFrame {
         //Configuração da tela
         setTitle("TecStore - Loja");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(720, 540);
+        setSize(780, 640);
         setLocationRelativeTo(null);
         getContentPane().setBackground(CINZA_FUNDO);
 
-        //Header azul
-        JPanel header = new JPanel(new BorderLayout(10, 0));
-        header.setBackground(AZUL);
-        header.setBorder(BorderFactory.createEmptyBorder(12, 20, 12, 20));
+        //Header com degradê azul (mesmo estilo das telas de perfil e configuração)
+        JPanel header = new JPanel(new BorderLayout(10, 0)) {
+            @Override
+            protected void paintComponent(Graphics g){
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setPaint(new GradientPaint(0, 0, AZUL, getWidth(), getHeight(), AZUL_ESCURO));
+                g2.fillRect(0, 0, getWidth(), getHeight());
+                g2.dispose();
+            }
+        };
+        header.setBorder(BorderFactory.createEmptyBorder(14, 24, 14, 24));
 
         JLabel titulo = new JLabel("Nossos produtos");
         titulo.setFont(new Font("SansSerif", Font.BOLD, 20));
@@ -79,22 +97,39 @@ public class TelaHome extends JFrame {
         painelCarrinho.add(verCarrinho, BorderLayout.CENTER);
         painelCarrinho.add(contadorCarrinho, BorderLayout.EAST);
 
+        gerenciar = new JButton("Gerenciar");
+        gerenciar.setFont(new Font("SansSerif", Font.PLAIN, 13));
+        gerenciar.setForeground(Color.WHITE);
+        gerenciar.setBorderPainted(false);
+        gerenciar.setContentAreaFilled(false);
+        gerenciar.setFocusPainted(false);
+        gerenciar.setOpaque(false);
+        gerenciar.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        hoverClaro(gerenciar);
+
         painelAcoes.add(minhaConta);
         painelAcoes.add(painelCarrinho);
+        painelAcoes.add(gerenciar);
 
         header.add(titulo, BorderLayout.WEST);
-        painelAcoes.setPreferredSize(new Dimension(240, 32));
+        painelAcoes.setPreferredSize(new Dimension(340, 32));
         header.add(painelAcoes, BorderLayout.EAST);
         add(header, BorderLayout.NORTH);
 
         //Grade de produtos (2 colunas)
-        painelProdutos = new JPanel(new GridLayout(0, 2, 15, 15));
+        painelProdutos = new JPanel(new GridLayout(0, 2, 18, 18));
         painelProdutos.setBackground(CINZA_FUNDO);
-        painelProdutos.setBorder(BorderFactory.createEmptyBorder(15, 20, 15, 20));
 
-        JScrollPane scrollProdutos = new JScrollPane(painelProdutos);
+        //Wrapper evita que os cards sejam esticados quando há poucos produtos
+        JPanel wrapper = new JPanel(new BorderLayout());
+        wrapper.setBackground(CINZA_FUNDO);
+        wrapper.setBorder(BorderFactory.createEmptyBorder(20, 24, 20, 24));
+        wrapper.add(painelProdutos, BorderLayout.NORTH);
+
+        JScrollPane scrollProdutos = new JScrollPane(wrapper);
         scrollProdutos.setBorder(null);
         scrollProdutos.getViewport().setBackground(CINZA_FUNDO);
+        scrollProdutos.getVerticalScrollBar().setUnitIncrement(16);
         scrollProdutos.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         add(scrollProdutos, BorderLayout.CENTER);
 
@@ -114,6 +149,11 @@ public class TelaHome extends JFrame {
 
         verCarrinho.addActionListener(e -> {
             TelaCarrinho carrinho = new TelaCarrinho();
+            dispose();
+        });
+
+        gerenciar.addActionListener(e -> {
+            TelaAdicionarProduto produto = new TelaAdicionarProduto();
             dispose();
         });
 
@@ -150,49 +190,75 @@ public class TelaHome extends JFrame {
     }
 
     public JPanel criarCardProduto(Produto produto){
-        JPanel card = new JPanel(new BorderLayout(8, 8));
-        card.setBackground(Color.WHITE);
-        card.setBorder(BorderFactory.createCompoundBorder(
-                new BordaArredondada(12, BORDA_CLARA),
-                BorderFactory.createEmptyBorder(14, 14, 14, 14)
-        ));
-        card.setPreferredSize(new Dimension(310, 150));
+        String categoriaTxt = produto.getCategoria();
+        if(categoriaTxt == null || categoriaTxt.trim().isEmpty()){
+            categoriaTxt = "Geral";
+        }
+        Color[] paleta = PALETAS[Math.abs(categoriaTxt.hashCode()) % PALETAS.length];
 
-        //Categoria como chip colorido + nome do produto
-        JPanel painelTopo = new JPanel(new BorderLayout(8, 0));
-        painelTopo.setOpaque(false);
+        //Card com cantos arredondados e sombra suave
+        CardProduto card = new CardProduto(new BorderLayout(0, 10));
+        card.setBorder(BorderFactory.createEmptyBorder(12, 12, 16, 12));
+        card.setPreferredSize(new Dimension(330, 275));
 
-        JLabel categoria = new JLabel(produto.getCategoria());
-        categoria.setFont(new Font("SansSerif", Font.BOLD, 11));
-        categoria.setForeground(AZUL);
+        //Miniatura colorida com a inicial do produto
+        String nomeProduto = produto.getNome() == null ? "" : produto.getNome();
+        String letra = nomeProduto.isEmpty() ? "?" : nomeProduto.substring(0, 1).toUpperCase();
+        card.add(new Miniatura(paleta[0], paleta[1], letra), BorderLayout.NORTH);
+
+        //Informações: categoria (chip), nome e descrição
+        JPanel info = new JPanel();
+        info.setOpaque(false);
+        info.setLayout(new BoxLayout(info, BoxLayout.Y_AXIS));
+
+        JLabel categoria = new JLabel(categoriaTxt.toUpperCase());
+        categoria.setFont(new Font("SansSerif", Font.BOLD, 10));
+        categoria.setForeground(paleta[1]);
         categoria.setOpaque(true);
-        categoria.setBackground(new Color(232, 242, 250));
+        categoria.setBackground(clarear(paleta[0], 0.85f));
         categoria.setBorder(BorderFactory.createEmptyBorder(3, 8, 3, 8));
 
-        JLabel nome = new JLabel("<html>" + produto.getNome() + "</html>");
-        nome.setFont(new Font("SansSerif", Font.BOLD, 14));
+        JPanel linhaChip = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        linhaChip.setOpaque(false);
+        linhaChip.setAlignmentX(Component.LEFT_ALIGNMENT);
+        linhaChip.add(categoria);
+
+        JLabel nome = new JLabel("<html><div style='width:270px'>" + escapar(nomeProduto) + "</div></html>");
+        nome.setFont(new Font("SansSerif", Font.BOLD, 15));
         nome.setForeground(new Color(40, 40, 40));
+        nome.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        painelTopo.add(categoria, BorderLayout.WEST);
-        painelTopo.add(nome, BorderLayout.CENTER);
-        card.add(painelTopo, BorderLayout.NORTH);
-
-        //Descrição
-        JLabel descricao = new JLabel("<html><span style='color:#646464'>" + produto.getDescricao() + "</span></html>");
+        String desc = produto.getDescricao() == null ? "" : produto.getDescricao();
+        if(desc.length() > 80){
+            desc = desc.substring(0, 77) + "...";
+        }
+        JLabel descricao = new JLabel("<html><div style='width:270px;color:#646464'>" + escapar(desc) + "</div></html>");
         descricao.setFont(new Font("SansSerif", Font.PLAIN, 12));
-        card.add(descricao, BorderLayout.CENTER);
+        descricao.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        info.add(linhaChip);
+        info.add(Box.createVerticalStrut(8));
+        info.add(nome);
+        info.add(Box.createVerticalStrut(4));
+        info.add(descricao);
+        card.add(info, BorderLayout.CENTER);
 
         //Preço + quantidade + botão
         JPanel painelBase = new JPanel(new BorderLayout(10, 0));
         painelBase.setOpaque(false);
+        painelBase.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(1, 0, 0, 0, BORDA_CLARA),
+                BorderFactory.createEmptyBorder(10, 0, 0, 0)
+        ));
 
-        JLabel preco = new JLabel(String.format("R$ %.2f", produto.getPreco()));
-        preco.setFont(new Font("SansSerif", Font.BOLD, 17));
+        JLabel preco = new JLabel("<html><span style='font-size:10px;color:#646464'>R$</span> "
+                + String.format("%.2f", produto.getPreco()) + "</html>");
+        preco.setFont(new Font("SansSerif", Font.BOLD, 18));
         preco.setForeground(AZUL_ESCURO);
 
         JSpinner quantidade = new JSpinner(new SpinnerNumberModel(1, 1, 99, 1));
         quantidade.setFont(new Font("SansSerif", Font.PLAIN, 12));
-        quantidade.setPreferredSize(new Dimension(50, 28));
+        quantidade.setPreferredSize(new Dimension(52, 30));
 
         JButton adicionar = new JButton("Adicionar");
         adicionar.setFont(new Font("SansSerif", Font.BOLD, 12));
@@ -200,14 +266,23 @@ public class TelaHome extends JFrame {
         adicionar.setForeground(Color.WHITE);
         adicionar.setFocusPainted(false);
         adicionar.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        adicionar.setBorder(BorderFactory.createEmptyBorder(6, 14, 6, 14));
+        adicionar.setBorder(BorderFactory.createEmptyBorder(7, 14, 7, 14));
         hoverEscuro(adicionar);
 
         adicionar.addActionListener(e -> {
             int qtd = (int) quantidade.getValue();
             Carrinho.adicionar(produto, qtd);
-            JOptionPane.showMessageDialog(this, qtd + "x " + produto.getNome() + " adicionado ao carrinho");
             atualizarContador();
+
+            //Feedback no próprio botão (no lugar do pop-up)
+            adicionar.setText("Adicionado!");
+            adicionar.setBackground(VERDE);
+            Timer volta = new Timer(1200, ev -> {
+                adicionar.setText("Adicionar");
+                adicionar.setBackground(AZUL);
+            });
+            volta.setRepeats(false);
+            volta.start();
         });
 
         JPanel painelAcao = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
@@ -257,6 +332,88 @@ public class TelaHome extends JFrame {
                 botao.setForeground(Color.WHITE);
             }
         });
+    }
+
+    //Mistura a cor com branco (fator 0 = cor original, 1 = branco)
+    private static Color clarear(Color c, float fator){
+        int r = (int) (c.getRed() + (255 - c.getRed()) * fator);
+        int g = (int) (c.getGreen() + (255 - c.getGreen()) * fator);
+        int b = (int) (c.getBlue() + (255 - c.getBlue()) * fator);
+        return new Color(r, g, b);
+    }
+
+    //Evita que caracteres como < e > quebrem o texto em HTML
+    private static String escapar(String s){
+        return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
+    }
+
+    //Card branco arredondado com sombra suave
+    private static class CardProduto extends JPanel {
+        CardProduto(LayoutManager layout){
+            super(layout);
+            setOpaque(false);
+        }
+
+        @Override
+        protected void paintComponent(Graphics g){
+            Graphics2D g2 = (Graphics2D) g.create();
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            int w = getWidth();
+            int h = getHeight();
+
+            g2.setColor(new Color(0, 0, 0, 14));
+            g2.fillRoundRect(1, 3, w - 3, h - 4, 18, 18);
+
+            g2.setColor(Color.WHITE);
+            g2.fillRoundRect(0, 0, w - 2, h - 4, 18, 18);
+
+            g2.setColor(BORDA_CLARA);
+            g2.drawRoundRect(0, 0, w - 3, h - 5, 18, 18);
+            g2.dispose();
+        }
+    }
+
+    //Miniatura com degradê e a inicial do produto
+    private static class Miniatura extends JPanel {
+        private final Color cor1, cor2;
+        private final String letra;
+
+        Miniatura(Color cor1, Color cor2, String letra){
+            this.cor1 = cor1;
+            this.cor2 = cor2;
+            this.letra = letra;
+            setOpaque(false);
+            setPreferredSize(new Dimension(100, 78));
+        }
+
+        @Override
+        protected void paintComponent(Graphics g){
+            Graphics2D g2 = (Graphics2D) g.create();
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+            int w = getWidth();
+            int h = getHeight();
+
+            g2.setPaint(new GradientPaint(0, 0, cor1, w, h, cor2));
+            g2.fillRoundRect(0, 0, w, h, 12, 12);
+
+            //Círculos decorativos
+            g2.setClip(new java.awt.geom.RoundRectangle2D.Float(0, 0, w, h, 12, 12));
+            g2.setColor(new Color(255, 255, 255, 35));
+            g2.fillOval(w - 70, -30, 110, 110);
+            g2.setColor(new Color(255, 255, 255, 25));
+            g2.fillOval(w - 130, 30, 80, 80);
+            g2.setClip(null);
+
+            //Inicial do produto
+            g2.setColor(new Color(255, 255, 255, 235));
+            g2.setFont(new Font("SansSerif", Font.BOLD, 40));
+            FontMetrics fm = g2.getFontMetrics();
+            int x = (w - fm.stringWidth(letra)) / 2;
+            int y = (h - fm.getHeight()) / 2 + fm.getAscent();
+            g2.drawString(letra, x, y);
+            g2.dispose();
+        }
     }
 
     //Borda com cantos arredondados
